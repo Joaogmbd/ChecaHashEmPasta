@@ -1,5 +1,5 @@
 ﻿################
-$setHash = '534619409377B761AB272ADC9CD77BF3' #HASH obtido manualmente do arquivo
+$setHash = '539879409377B761AAD657DC9CD77BF3' #HASH obtido manualmente do arquivo
 $setHashAlgorithm = 'MD5'                     #tipo de hash que será usado na comparação
 $setFileName = 'arquivo.txt'                  #nome do arquivo que será comparado
 $setPath = 'C:\root\caminho'                  #diretório onde começará a procura do arquivo
