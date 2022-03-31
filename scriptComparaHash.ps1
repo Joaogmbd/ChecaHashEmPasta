@@ -46,7 +46,6 @@ if ($e -eq 'path'){
 elseif($e -eq 'file'){
 
     $c =  "$p\$a"
-    echo $caminho
     $check = Test-Path -Path $c -PathType Leaf
 
     if($check -eq 0){
