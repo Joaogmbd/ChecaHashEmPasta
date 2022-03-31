@@ -6,6 +6,7 @@ param($e, $h, $p, $a)
     #$e                                             #escolhe entre comparar apenas um arquivo ou vários mesmos arquivos a partir de um diretório
     $soma = 0                                       #Soma quantidade total de problemas encontrados durante a execução do código
     $Mensagem = 'Nenhum arquivo foi modificado.'    #Mensagem que retornará junto com o código de sáida
+    $exit = 0
     ################
 
 if ($e -eq 'path'){ 
@@ -16,40 +17,57 @@ if ($e -eq 'path'){
         $paths += "$p\$_\$a"
     }
     $pathModificado = @()
-    #corre toda a lista de diretórios e compara hash obtido de cada arquivo com o original ($h
+    #corre toda a lista de diretórios e compara hash obtido de cada arquivo com o original
     foreach ($i in $paths ){
-        $Hash = Get-FileHash $i -Algorithm MD5
-        $Hash = $Hash.Hash
+            #Verifica a existencia do arquivo
+            $check = Test-Path -Path $i -PathType Leaf
+            if($check -eq 0){
+                #criando o arquivo
+                New-Item -Path $i -ItemType "file" -Value "Arquivo de segurança para monitoramento de alterações" > $null
+            }
+
+        $Hash = (Get-FileHash $i -Algorithm MD5 -ErrorAction SilentlyContinue).Hash
         if ($Hash -eq $h){
-            echo 'Hash válido!'
         }else{
-            echo 'hash inválido!'
+            $timestamp = (Get-Item "$i" -ErrorAction SilentlyContinue).LastWriteTime   #Recebe informacao de quando foi alterado o arquivo
             $soma += 1
-            $pathModificado += $i
+            $pathModificado += "$i as $timestamp`n"
         }
     }
     #exibe mensagem e realiza o retorno do script
     if($soma -gt 0){
-        $Mensagem = 'Foram encontrados '+$soma+' arquivos modificados nos diretórios: '+ $pathModificado
-        echo $Mensagem
-        exit 2
-    }elseif($soma -eq 0){
-        echo $Mensagem
-        exit 0
+        $Mensagem = "Foram encontrados $soma arquivos modificados nos diretorios:`n $pathModificado"
+        $exit = 2
     }
+    echo $Mensagem
+    exit $exit
 #Comparação de hash de apenas um arquivo
-}elseif($e -eq 'file'){
-  $Hash = Get-FileHash "$p\$a" -Algorithm MD5
-  $Hash = $Hash.Hash
-  if ($Hash -eq $h){
-  #exibe mensagem e realiza o retorno do script
-        echo "hash válido no local"
+}
+elseif($e -eq 'file'){
+
+    $c =  "$p\$a"
+    echo $caminho
+    $check = Test-Path -Path $c -PathType Leaf
+
+    if($check -eq 0){
+    echo "O arquivo nao existe"
+    exit 3
+    }
+
+    $Hash = (Get-FileHash $c -Algorithm MD5).Hash
+
+    $timestamp = (Get-Item $c).LastWriteTime   #Recebe horário exato em que foi executado o script
+    if ($Hash -eq $h){
+    #exibe mensagem e realiza o retorno do script
+        echo "hash valido no local: $c"
         exit 0
         }else{
-        echo 'Hash invalido'
+        $Mensagem = "O arquivo foi MODIFICADO no local: $c as $timestamp"
+        echo $Mensagem
         exit 2
         }
 #quando o script recebe algum parametro errado, a mensagem a seguir é exibida
 }else{
-    echo "Escolha uma opção válida!"
+    echo "Erro na definicao de parametros, verifique-os novamente."
+    exit 3
 }
