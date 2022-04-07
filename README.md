@@ -1,3 +1,5 @@
 # ComparaHash
 Script para monitorar hash de arquivo(s) dentro de pastas.
-Meu primeiro script em Powershell.
+Feito para ser utilizado com NAGIOS e NSClient++
+
+meu primeiro script em powershell.
