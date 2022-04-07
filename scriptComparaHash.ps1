@@ -46,6 +46,7 @@ if ($e -eq 'path'){
 elseif($e -eq 'file'){
 
     $c =  "$p\$a"
+    echo $caminho
     $check = Test-Path -Path $c -PathType Leaf
 
     if($check -eq 0){
@@ -58,13 +59,14 @@ elseif($e -eq 'file'){
     $timestamp = (Get-Item $c).LastWriteTime   #Recebe horário exato em que foi executado o script
     if ($Hash -eq $h){
     #exibe mensagem e realiza o retorno do script
-        echo "hash valido no local: $c"
-        exit 0
+        $Mensagem = "hash valido no local: $c"
+        $exit = 0
         }else{
         $Mensagem = "O arquivo foi MODIFICADO no local: $c as $timestamp"
-        echo $Mensagem
-        exit 2
+        $exit = 2
         }
+        echo $Mensagem
+        exit $exit
 #quando o script recebe algum parametro errado, a mensagem a seguir é exibida
 }else{
     echo "Erro na definicao de parametros, verifique-os novamente."
