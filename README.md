@@ -1,4 +1,3 @@
 # ComparaHash
-Script em powershell para monitorar hash de arquivo dentro de pastas.
-Desenvolvido para o TCEES
-primeiro script desenvolvido em PoweShell
+Script para monitorar hash de arquivo(s) dentro de pastas.
+Meu primeiro script em Powershell.
